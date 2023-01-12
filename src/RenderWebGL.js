@@ -2172,6 +2172,13 @@ class RenderWebGL extends EventEmitter {
 
         drawable.skin.setNamedProp(name, value)
     }
+
+    getBubbleDefaults() {
+        const bubble = new TextBubbleSkin()
+        const props = bubble.getAllProps()
+        bubble.dispose()
+        return props
+    }
 }
 
 // :3
