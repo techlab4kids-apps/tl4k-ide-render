@@ -2160,6 +2160,7 @@ class RenderWebGL extends EventEmitter {
             return {};
         }
 
+        console.log(drawable)
         return drawable.getAllProps()
     }
 
