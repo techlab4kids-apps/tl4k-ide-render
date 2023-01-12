@@ -2156,21 +2156,21 @@ class RenderWebGL extends EventEmitter {
 
     getTextBubbleProps(BubbleID) {
         const drawable = this._allDrawables[BubbleID];
-        if (!drawable || drawable instanceof TextBubbleSkin) {
+        if (!drawable || drawable.skin instanceof TextBubbleSkin) {
             return {};
         }
 
         console.log(drawable)
-        return drawable.getAllProps()
+        return drawable.skin.getAllProps()
     }
 
     setTextBubbleProp(BubbleID, name, value) {
         const drawable = this._allDrawables[BubbleID];
-        if (!drawable || drawable instanceof TextBubbleSkin) {
+        if (!drawable || drawable.skin instanceof TextBubbleSkin) {
             return;
         }
 
-        drawable.setNamedProp(name, value)
+        drawable.skin.setNamedProp(name, value)
     }
 }
 
