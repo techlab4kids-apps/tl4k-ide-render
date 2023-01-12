@@ -287,15 +287,15 @@ class TextBubbleSkin extends Skin {
         return this._texture;
     }
 
-    getNamedProperty(name) {
+    getNamedProp(name) {
         return BubbleStyle[name]
     }
 
-    setNamedProperty(name, value) {
+    setNamedProp(name, value) {
         BubbleStyle[name] = value
     }
 
-    getAllPropertys() {
+    getAllProps() {
         return BubbleStyle
     }
 }

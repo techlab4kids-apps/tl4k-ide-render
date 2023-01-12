@@ -2160,7 +2160,7 @@ class RenderWebGL extends EventEmitter {
             return {};
         }
 
-        return drawable.getAllPropertys()
+        return drawable.getAllProps()
     }
 
     setTextBubbleProp(BubbleID, name, value) {
@@ -2169,7 +2169,7 @@ class RenderWebGL extends EventEmitter {
             return;
         }
 
-        drawable.setNamedProperty(name, value)
+        drawable.setNamedProp(name, value)
     }
 }
 
