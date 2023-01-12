@@ -2156,7 +2156,7 @@ class RenderWebGL extends EventEmitter {
 
     getTextBubbleProps(BubbleID) {
         const drawable = this._allDrawables[BubbleID];
-        if (!drawable ) {
+        if (!drawable || drawable instanceof TextBubbleSkin) {
             return {};
         }
 
@@ -2165,7 +2165,7 @@ class RenderWebGL extends EventEmitter {
 
     setTextBubbleProp(BubbleID, name, value) {
         const drawable = this._allDrawables[BubbleID];
-        if (!drawable ) {
+        if (!drawable || drawable instanceof TextBubbleSkin) {
             return;
         }
 
