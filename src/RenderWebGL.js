@@ -517,14 +517,14 @@ class RenderWebGL extends EventEmitter {
      * @param {!string} text - the text for the bubble.
      * @param {!boolean} pointsLeft - which side the bubble is pointing.
      */
-    updateTextSkin (skinId, type, text, pointsLeft) {
+    updateTextSkin (skinId, type, text, pointsLeft, props) {
         if (this._allSkins[skinId] instanceof TextBubbleSkin) {
-            this._allSkins[skinId].setTextBubble(type, text, pointsLeft);
+            this._allSkins[skinId].setTextBubble(type, text, pointsLeft, props);
             return;
         }
 
         const newSkin = new TextBubbleSkin(skinId, this);
-        newSkin.setTextBubble(type, text, pointsLeft);
+        newSkin.setTextBubble(type, text, pointsLeft, props);
         this._reskin(skinId, newSkin);
     }
 
@@ -2152,25 +2152,6 @@ class RenderWebGL extends EventEmitter {
     requestSnapshot (callback) {
         this.dirty = true;
         this._snapshotCallbacks.push(callback);
-    }
-
-    getTextBubbleProps(BubbleID) {
-        const drawable = this._allDrawables[BubbleID];
-        if (!drawable || drawable.skin instanceof TextBubbleSkin) {
-            return {};
-        }
-
-        console.log(drawable)
-        return drawable.skin.getAllProps()
-    }
-
-    setTextBubbleProp(BubbleID, name, value) {
-        const drawable = this._allDrawables[BubbleID];
-        if (!drawable || drawable.skin instanceof TextBubbleSkin) {
-            return;
-        }
-
-        drawable.skin.setNamedProp(name, value)
     }
 
     getBubbleDefaults() {
