@@ -2153,6 +2153,24 @@ class RenderWebGL extends EventEmitter {
         this.dirty = true;
         this._snapshotCallbacks.push(callback);
     }
+
+    getTextBubbleProps(BubbleID) {
+        const drawable = this._allDrawables[BubbleID];
+        if (!drawable ) {
+            return {};
+        }
+
+        return drawable.getAllPropertys()
+    }
+
+    setTextBubbleProp(BubbleID, name, value) {
+        const drawable = this._allDrawables[BubbleID];
+        if (!drawable ) {
+            return;
+        }
+
+        drawable.setNamedProperty(name, value)
+    }
 }
 
 // :3
