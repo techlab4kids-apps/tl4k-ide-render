@@ -452,10 +452,10 @@ class RenderWebGL extends EventEmitter {
      * @param {!boolean} pointsLeft - which side the bubble is pointing.
      * @returns {!int} the ID for the new skin.
      */
-    createTextSkin (type, text, pointsLeft) {
+    createTextSkin (type, text, pointsLeft, props) {
         const skinId = this._nextSkinId++;
         const newSkin = new TextBubbleSkin(skinId, this);
-        newSkin.setTextBubble(type, text, pointsLeft);
+        newSkin.setTextBubble(type, text, pointsLeft, props);
         this._allSkins[skinId] = newSkin;
         return skinId;
     }
