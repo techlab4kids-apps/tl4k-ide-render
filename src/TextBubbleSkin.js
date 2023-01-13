@@ -155,7 +155,7 @@ class TextBubbleSkin extends Skin {
      * Render this text bubble at a certain scale, using the current parameters, to the canvas.
      * @param {number} scale The scale to render the bubble at
      */
-    _renderTextBubble (scaleMax) {
+    _renderTextBubble (scale) {
         const ctx = this._canvas.getContext('2d');
 
         if (this._textDirty) {
