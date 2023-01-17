@@ -2160,7 +2160,13 @@ class RenderWebGL extends EventEmitter {
         bubble.dispose()
         return props
     }
+
+    getPenDrawableId() {
+        return this._allDrawables.findIndex(drawable => drawable instanceof PenSkin)
+    }
 }
+
+// i want to know who added this XD
 
 // :3
 RenderWebGL.prototype.canHazPixels = RenderWebGL.prototype.extractDrawableScreenSpace;
