@@ -468,14 +468,16 @@ class RenderWebGL extends EventEmitter {
      * skin will be used
      */
     updateSVGSkin (skinId, svgData, rotationCenter) {
-        if (this._allSkins[skinId] instanceof SVGSkin) {
-            this._allSkins[skinId].setSVG(svgData, rotationCenter);
-            return;
-        }
+        return new Promise(resolve => {
+            if (this._allSkins[skinId] instanceof SVGSkin) {
+                this._allSkins[skinId].setSVG(svgData, rotationCenter, () => { resolve() });
+                return;
+            }
 
-        const newSkin = new SVGSkin(skinId, this);
-        newSkin.setSVG(svgData, rotationCenter);
-        this._reskin(skinId, newSkin);
+            const newSkin = new SVGSkin(skinId, this);
+            newSkin.setSVG(svgData, rotationCenter, () => { resolve() });
+            this._reskin(skinId, newSkin);
+        })
     }
 
     /**
