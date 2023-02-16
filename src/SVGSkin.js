@@ -198,7 +198,7 @@ class SVGSkin extends Skin {
      * calculated from the bounding box
      * @fires Skin.event:WasAltered
      */
-    setSVG (svgData, rotationCenter) {
+    setSVG (svgData, rotationCenter, onLoaded) {
         const svgTag = loadSvgString(svgData);
         const svgText = serializeSvgToString(svgTag, true /* shouldInjectFonts */);
         this._svgImageLoaded = false;
@@ -234,6 +234,8 @@ class SVGSkin extends Skin {
             this._rotationCenter[1] = rotationCenter[1] - y;
 
             this._svgImageLoaded = true;
+
+            if (typeof onLoaded === 'function') onLoaded()
 
             this.emitWasAltered();
         };
