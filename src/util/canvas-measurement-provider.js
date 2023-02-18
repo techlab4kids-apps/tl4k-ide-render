@@ -32,7 +32,7 @@ class CanvasMeasurementProvider {
      */
     measureText (text) {
         if (!this._cache[text]) {
-            this._cache[text] = this._ctx.measureText(text).width;
+            this._cache[text] = this._ctx.measureText(text).actualBoundingBoxRight;
         }
         return this._cache[text];
     }
