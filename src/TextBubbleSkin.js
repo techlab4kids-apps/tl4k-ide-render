@@ -130,12 +130,14 @@ class TextBubbleSkin extends Skin {
      * Update the array of wrapped lines and the text dimensions.
      */
     _reflowLines () {
+        const ctx = this._canvas.getContext('2d')
         this._lines = this.textWrapper.wrapText(this._props.MAX_LINE_WIDTH, this._text);
 
         // Measure width of longest line to avoid extra-wide bubbles
         let longestLineWidth = 0;
         for (const line of this._lines) {
             longestLineWidth = Math.max(longestLineWidth, this.measurementProvider.measureText(line));
+            this._props.LINE_HEIGHT = Math.max(this._props.LINE_HEIGHT, ctx.measureText(line).actualBoundingBoxAscent)
         }
 
         // Calculate the canvas-space sizes of the padded text area and full text bubble
