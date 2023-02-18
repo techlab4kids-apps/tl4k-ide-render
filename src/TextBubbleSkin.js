@@ -136,8 +136,9 @@ class TextBubbleSkin extends Skin {
         // Measure width of longest line to avoid extra-wide bubbles
         let longestLineWidth = 0;
         for (const line of this._lines) {
+            const debug = ctx.measureText(line)
             longestLineWidth = Math.max(longestLineWidth, this.measurementProvider.measureText(line));
-            this._props.LINE_HEIGHT = Math.max(this._props.LINE_HEIGHT, ctx.measureText(line).actualBoundingBoxAscent)
+            this._props.LINE_HEIGHT = Math.max(this._props.LINE_HEIGHT, debug.actualBoundingBoxAscent)
         }
 
         // Calculate the canvas-space sizes of the padded text area and full text bubble
