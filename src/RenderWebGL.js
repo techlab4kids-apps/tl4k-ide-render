@@ -220,7 +220,7 @@ class RenderWebGL extends EventEmitter {
         // tw: track id of pen skin
         this._penSkinId = null;
 
-        this.useHighQualityRender = false;
+        this.useHighQualityRender = true;
 
         this.offscreenTouching = false;
 
