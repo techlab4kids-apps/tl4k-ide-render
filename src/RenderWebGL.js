@@ -274,6 +274,7 @@ class RenderWebGL extends EventEmitter {
                 drawable.setHighQuality(this.useHighQualityRender);
             }
         }
+    }
     
     /**
      * Configure whether the renderer should let projects access private skins.
