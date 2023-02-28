@@ -274,8 +274,7 @@ class RenderWebGL extends EventEmitter {
                 drawable.setHighQuality(this.useHighQualityRender);
             }
         }
-    }
-    setpenres (res) {const skin = this._allSkins[this._penSkinId];skin.setRenderQuality(res)}
+    
     /**
      * Configure whether the renderer should let projects access private skins.
      * @param {boolean} allowPrivateSkinAccess Whether projects can access private skins or not.
