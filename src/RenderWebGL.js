@@ -11,6 +11,7 @@ const RenderConstants = require('./RenderConstants');
 const ShaderManager = require('./ShaderManager');
 const SVGSkin = require('./SVGSkin');
 const TextBubbleSkin = require('./TextBubbleSkin');
+const TextCostumeSkin = require('./TextCostumeSkin');
 const EffectTransform = require('./EffectTransform');
 const log = require('./util/log');
 
@@ -530,6 +531,27 @@ class RenderWebGL extends EventEmitter {
         this._reskin(skinId, newSkin);
     }
 
+    /**
+     * Update a skin using the text costume svg creator.
+     * @param {!object} textState the state to apply.
+     * @param {!boolean} pointsLeft - which side the bubble is pointing.
+     */
+    updateTextCostumeSkin (textState) {
+        // update existing skin
+        if (textState.skinId && this._allSkins[textState.skinId] instanceof TextCostumeSkin) {
+            this._allSkins[textState.skinId].setTextAndStyle(textState);
+
+            return textState.skinId;
+        } // create and update a new skin
+
+
+        var skinId = this._nextSkinId++;
+        var newSkin = new TextCostumeSkin(skinId, this);
+        this._allSkins[skinId] = newSkin;
+        newSkin.setTextAndStyle(textState); // this._reskin(skinId, newSkin); // this is erroring- might be necessary?
+
+        return skinId;
+    }
 
     /**
      * Destroy an existing skin. Do not use the skin or its ID after calling this.
