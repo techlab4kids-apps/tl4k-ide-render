@@ -150,7 +150,7 @@ class TextCostumeSkin extends Skin {
             let xOffset = 0;
             if (this.style.ALIGN === 'center') xOffset = this._size[0] / 2 - lineWidth / 2;
             if (this.style.ALIGN === 'right') xOffset = this._size[0] - lineWidth;
-            const yOffset = this.style.LINE_HEIGHT * lineNumber + FontHeightRatio * this.style.FONT_SIZE + this.style.VERTICAL_PADDING;
+            let yOffset = this.style.LINE_HEIGHT * lineNumber + FontHeightRatio * this.style.FONT_SIZE + this.style.VERTICAL_PADDING;
 
             if (this.style.STROKE_WIDTH > 0) {
             yOffset += this.style.STROKE_WIDTH;
