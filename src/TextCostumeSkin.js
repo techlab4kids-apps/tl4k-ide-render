@@ -81,7 +81,7 @@ class TextCostumeSkin extends Skin {
         this.style.STROKE_COLOR = textState.strokeColor;
         this.style.VERTICAL_PADDING = textState.size / 7;
         this.style.RAINBOW = textState.rainbow;
-        this.measurementProvider.setFontAndSize(this.style.FONT, this.style.FONT_SIZE);
+        this._restyleCanvas()
         this._textDirty = true;
         this._textureDirty = true;
         this.emit(Skin.Events.WasAltered);
