@@ -25,6 +25,10 @@ class CanvasMeasurementProvider {
         
     }
 
+    setFontAndSize (font, size) {
+        this._ctx.font = `${this.style.FONT_SIZE}px ${this.style.FONT}, sans-serif`;
+    }
+
     /**
      * Measure a whole string as one unit.
      * @param {string} text - the text to measure.
