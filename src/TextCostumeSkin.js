@@ -116,6 +116,17 @@ class TextCostumeSkin extends Skin {
         this._textDirty = false;
     }
 
+    get width () {
+        let longestLineWidth = 0;
+        for (const line of this._lines) {
+            longestLineWidth = Math.max(longestLineWidth, this.measurementProvider.measureText(line));
+        }
+        return longestLineWidth;
+    }
+
+    get height () {
+        return this._size[1]
+    }
     /**
      * Render this text text at a certain scale, using the current parameters, to the canvas.
      * @param {number} scale The scale to render the text at
