@@ -91,14 +91,14 @@ class TextCostumeSkin extends Skin {
      * Re-style the canvas after resizing it. This is necessary to ensure proper text measurement.
      */
     _restyleCanvas() {
-        this._canvas.getContext('2d').font = "".concat(this.style.FONT_SIZE, "px ").concat(this.style.FONT, ", sans-serif");
+        this._canvas.getContext('2d').font = `${this.style.FONT_SIZE}px ${this.style.FONT}, sans-serif`;
     }
 
     /**
      * Update the array of wrapped lines and the text dimensions.
      */
     _reflowLines(scale) {
-        const maxWidth = this.style.MAX_LINE_WIDTH; // Max width is in "native scratch units", convert to raw pixels
+        let maxWidth = this.style.MAX_LINE_WIDTH; // Max width is in "native scratch units", convert to raw pixels
 
         maxWidth *= this._renderer.gl.canvas.width / this._renderer.getNativeSize()[0]; // Shrink the max width if the drawable is scaled up
 
@@ -147,7 +147,7 @@ class TextCostumeSkin extends Skin {
         for (const lineNumber = 0; lineNumber < lines.length; lineNumber++) {
             const line = lines[lineNumber];
             const lineWidth = this.measurementProvider.measureText(line);
-            const xOffset = 0;
+            let xOffset = 0;
             if (this.style.ALIGN === 'center') xOffset = this._size[0] / 2 - lineWidth / 2;
             if (this.style.ALIGN === 'right') xOffset = this._size[0] - lineWidth;
             const yOffset = this.style.LINE_HEIGHT * lineNumber + FontHeightRatio * this.style.FONT_SIZE + this.style.VERTICAL_PADDING;
