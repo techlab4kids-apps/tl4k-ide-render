@@ -26,7 +26,7 @@ class CanvasMeasurementProvider {
     }
 
     setFontAndSize (font, size) {
-        this._ctx.font = `${this.style.FONT_SIZE}px ${this.style.FONT}, sans-serif`;
+        this._ctx.font = `${size}px ${font}, sans-serif`;
     }
 
     /**
