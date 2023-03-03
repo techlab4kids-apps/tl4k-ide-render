@@ -84,7 +84,7 @@ class TextCostumeSkin extends Skin {
         this.measurementProvider.setFontAndSize(this.style.FONT, this.style.FONT_SIZE);
         this._textDirty = true;
         this._textureDirty = true;
-        this.emit(Skin.Events.WasAltered);
+        this.emitWasAltered();
     }
 
     /**
