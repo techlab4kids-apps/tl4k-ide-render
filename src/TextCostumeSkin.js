@@ -144,7 +144,7 @@ class TextCostumeSkin extends Skin {
         ctx.font = "".concat(this.style.FONT_SIZE, "px ").concat(this.style.FONT, ", sans-serif");
         const lines = this._lines;
 
-        for (const lineNumber = 0; lineNumber < lines.length; lineNumber++) {
+        for (let lineNumber = 0; lineNumber < lines.length; lineNumber++) {
             const line = lines[lineNumber];
             const lineWidth = this.measurementProvider.measureText(line);
             let xOffset = 0;
@@ -163,7 +163,7 @@ class TextCostumeSkin extends Skin {
             const gradient = ctx.createLinearGradient(xOffset, 0, xOffset + lineWidth, 0);
             const stops = 12;
 
-            for (const i = 0; i < stops; i++) {
+            for (let i = 0; i < stops; i++) {
                 gradient.addColorStop(i / stops, "hsl(".concat(360 * i / stops, ", 100%, 50%)"));
             }
 
