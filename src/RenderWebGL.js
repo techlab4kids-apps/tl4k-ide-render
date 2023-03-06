@@ -641,8 +641,7 @@ class RenderWebGL extends EventEmitter {
     // e.g. the returned index does not have a drawable from this layer group in it)
     _endIndexForKnownLayerGroup (layerGroup) {
         const groupIndex = layerGroup.groupIndex;
-        if ((groupIndex === this._groupOrdering.length - 1) || 
-            groupIndex === this._groupOrdering.length - 2) {
+        if (groupIndex === this._groupOrdering.length - 1) {
             return this._drawList.length;
         }
         return this._layerGroups[this._groupOrdering[groupIndex + 1]].drawListOffset;
