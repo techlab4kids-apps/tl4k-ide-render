@@ -603,11 +603,25 @@ class RenderWebGL extends EventEmitter {
      * names
      */
     setLayerGroupOrdering (groupOrdering) {
+        const oldGroups = {};
+        for (let i = 0; i < this._groupOrdering.length; i++) {
+            const groupID = this._groupOrdering[i];
+            const layerGroup = this._layerGroups[groupID];
+            const startIndex = layerGroup.drawListOffset;
+            const endIndex = this._endIndexForKnownLayerGroup(groupID);
+            oldGroups[groupID] = this._drawList.slice(startIndex, endIndex);
+        }
+        this._drawList = []
         this._groupOrdering = groupOrdering;
         for (let i = 0; i < this._groupOrdering.length; i++) {
-            this._layerGroups[this._groupOrdering[i]] = {
+            const groupID = this._groupOrdering[i];
+            const oldLayerGroup = oldGroups[groupID];
+            if (oldLayerGroup) {
+                this._drawList = Array.concat(this._drawList, oldLayerGroup)
+            }
+            this._layerGroups[groupID] = {
                 groupIndex: i,
-                drawListOffset: 0
+                drawListOffset: this._drawList.length
             };
         }
     }
