@@ -608,7 +608,7 @@ class RenderWebGL extends EventEmitter {
             const groupID = this._groupOrdering[i];
             const layerGroup = this._layerGroups[groupID];
             const startIndex = layerGroup.drawListOffset;
-            const endIndex = this._endIndexForKnownLayerGroup(groupID);
+            const endIndex = this._endIndexForKnownLayerGroup(layerGroup);
             oldGroups[groupID] = this._drawList.slice(startIndex, endIndex);
         }
         this._drawList = []
