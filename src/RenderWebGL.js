@@ -617,7 +617,7 @@ class RenderWebGL extends EventEmitter {
             const groupID = this._groupOrdering[i];
             const oldLayerGroup = oldGroups[groupID];
             if (oldLayerGroup) {
-                this._drawList = Array.concat(this._drawList, oldLayerGroup)
+                this._drawList = this._drawList.concat(oldLayerGroup)
             }
             this._layerGroups[groupID] = {
                 groupIndex: i,
