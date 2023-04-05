@@ -250,6 +250,14 @@ class Drawable {
     }
 
     /**
+     * Update the scale if it is different. Marks the transform as dirty.
+     * @param {Array.<number>} transform A new scale.
+     */
+    updateTransform (transform) {
+        this.transform = transform;
+    }
+
+    /**
      * Update visibility if it is different. Marks the convex hull as dirty.
      * @param {boolean} visible A new visibility state.
      */

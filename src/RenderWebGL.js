@@ -446,11 +446,12 @@ class RenderWebGL extends EventEmitter {
     }
 
     /**
-     * Create a new SVG skin using the text bubble svg creator. The rotation center
+     * Create a new SVG skin using the text skin creator. The rotation center
      * is always placed at the top left.
      * @param {!string} type - either "say" or "think".
      * @param {!string} text - the text for the bubble.
      * @param {!boolean} pointsLeft - which side the bubble is pointing.
+     * @param {!object} props - text props.
      * @returns {!int} the ID for the new skin.
      */
     createTextSkin (type, text, pointsLeft, props) {
@@ -469,16 +470,14 @@ class RenderWebGL extends EventEmitter {
      * skin will be used
      */
     updateSVGSkin (skinId, svgData, rotationCenter) {
-        return new Promise(resolve => {
-            if (this._allSkins[skinId] instanceof SVGSkin) {
-                this._allSkins[skinId].setSVG(svgData, rotationCenter);
-                return;
-            }
+        if (this._allSkins[skinId] instanceof SVGSkin) {
+            this._allSkins[skinId].setSVG(svgData, rotationCenter);
+            return;
+        }
 
-            const newSkin = new SVGSkin(skinId, this);
-            newSkin.setSVG(svgData, rotationCenter);
-            this._reskin(skinId, newSkin);
-        })
+        const newSkin = new SVGSkin(skinId, this);
+        newSkin.setSVG(svgData, rotationCenter);
+        this._reskin(skinId, newSkin);
     }
 
     /**
@@ -514,11 +513,12 @@ class RenderWebGL extends EventEmitter {
     }
 
     /**
-     * Update a skin using the text bubble svg creator.
+     * Update a skin using the text skin creator.
      * @param {!int} skinId the ID for the skin to change.
      * @param {!string} type - either "say" or "think".
      * @param {!string} text - the text for the bubble.
      * @param {!boolean} pointsLeft - which side the bubble is pointing.
+     * @param {!object} props - the text props.
      */
     updateTextSkin (skinId, type, text, pointsLeft, props) {
         if (this._allSkins[skinId] instanceof TextBubbleSkin) {
@@ -535,6 +535,7 @@ class RenderWebGL extends EventEmitter {
      * Update a skin using the text costume svg creator.
      * @param {!object} textState the state to apply.
      * @param {!boolean} pointsLeft - which side the bubble is pointing.
+     * @returns {number} the the skin id
      */
     updateTextCostumeSkin (textState) {
         // update existing skin
@@ -545,8 +546,8 @@ class RenderWebGL extends EventEmitter {
         } // create and update a new skin
 
 
-        var skinId = this._nextSkinId++;
-        var newSkin = new TextCostumeSkin(skinId, this);
+        const skinId = this._nextSkinId++;
+        const newSkin = new TextCostumeSkin(skinId, this);
         this._allSkins[skinId] = newSkin;
         newSkin.setTextAndStyle(textState); // this._reskin(skinId, newSkin); // this is erroring- might be necessary?
 
@@ -611,13 +612,13 @@ class RenderWebGL extends EventEmitter {
             const endIndex = this._endIndexForKnownLayerGroup(layerGroup);
             oldGroups[groupID] = this._drawList.slice(startIndex, endIndex);
         }
-        this._drawList = []
+        this._drawList = [];
         this._groupOrdering = groupOrdering;
         for (let i = 0; i < this._groupOrdering.length; i++) {
             const groupID = this._groupOrdering[i];
             const oldLayerGroup = oldGroups[groupID];
             if (oldLayerGroup) {
-                this._drawList = this._drawList.concat(oldLayerGroup)
+                this._drawList = this._drawList.concat(oldLayerGroup);
             }
             this._layerGroups[groupID] = {
                 groupIndex: i,
@@ -1626,13 +1627,15 @@ class RenderWebGL extends EventEmitter {
      * @param {number} drawableID The drawable's id.
      * @param {number} direction A new direction.
      * @param {Array.<number>} scale A new scale.
+     * @param {Array.<number>} translate A new translation.
      */
-    updateDrawableDirectionScale (drawableID, direction, scale) {
+    updateDrawableDirectionScale (drawableID, direction, scale, translate) {
         const drawable = this._allDrawables[drawableID];
         // TODO: https://github.com/LLK/scratch-vm/issues/2288
         if (!drawable) return;
         drawable.updateDirection(direction);
         drawable.updateScale(scale);
+        if (translate) drawable.updateTranslation(translate);
     }
 
     /**
@@ -2193,15 +2196,15 @@ class RenderWebGL extends EventEmitter {
         this._snapshotCallbacks.push(callback);
     }
 
-    getBubbleDefaults() {
-        const bubble = new TextBubbleSkin()
-        const props = bubble.getAllProps()
-        bubble.dispose()
-        return props
+    getBubbleDefaults () {
+        const bubble = new TextBubbleSkin();
+        const props = bubble.getAllProps();
+        bubble.dispose();
+        return props;
     }
 
-    getPenDrawableId() {
-        return this._allDrawables.findIndex(drawable => drawable instanceof PenSkin)
+    getPenDrawableId () {
+        return this._allDrawables.findIndex(drawable => drawable instanceof PenSkin);
     }
 }
 
