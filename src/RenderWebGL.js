@@ -1962,9 +1962,10 @@ class RenderWebGL extends EventEmitter {
                 drawable.scale[0] * opts.framebufferWidth / this._nativeSize[0],
                 drawable.scale[1] * opts.framebufferHeight / this._nativeSize[1]
             ] : drawable.scale;
+            const drawableTransform = drawable.transform || [0, 0];
 
             // If the skin or texture isn't ready yet, skip it.
-            if (!drawable.skin || !drawable.skin.getTexture(drawableScale)) continue;
+            if (!drawable.skin || !drawable.skin.getTexture(drawableScale, drawableTransform)) continue;
 
             const uniforms = {};
 

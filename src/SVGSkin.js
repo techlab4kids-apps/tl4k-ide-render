@@ -102,7 +102,7 @@ class SVGSkin extends Skin {
      * @param {number} scale - The relative size of the MIP
      * @return {SVGMIP} An object that handles creating and updating SVG textures.
      */
-    createMIP (scale) {
+    createMIP (scale, transform) {
         const isLargestMIP = this._largestMIPScale < scale;
         // TW: Silhouette will lazily read image data from our <canvas>. However, this canvas is shared
         // between the Skin and Silhouette so changing it here can mess up Silhouette. To prevent that,
@@ -127,7 +127,7 @@ class SVGSkin extends Skin {
             this._svgImage.naturalHeight <= 0
         ) return super.getTexture();
         this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
-        this._context.setTransform(scale, 0, 0, scale, 0, 0);
+        this._context.setTransform(scale, transform[0], transform[1], scale, 0, 0);
         this._context.drawImage(this._svgImage, 0, 0);
 
         // TW: Reading image data from <canvas> is very slow and causes animations to stutter,
@@ -162,7 +162,7 @@ class SVGSkin extends Skin {
      * @param {Array<number>} scale - The scaling factors to be used, each in the [0,100] range.
      * @return {WebGLTexture} The GL texture representation of this skin when drawing at the given scale.
      */
-    getTexture (scale) {
+    getTexture (scale, transform) {
         // The texture only ever gets uniform scale. Take the larger of the two axes.
         const scaleMax = scale ? Math.max(Math.abs(scale[0]), Math.abs(scale[1])) : 100;
         const requestedScale = Math.min(scaleMax / 100, this._maxTextureScale);
@@ -176,7 +176,7 @@ class SVGSkin extends Skin {
         const mipScale = Math.pow(2, mipLevel - INDEX_OFFSET);
 
         if (this._svgImageLoaded && !this._scaledMIPs[mipLevel]) {
-            this._scaledMIPs[mipLevel] = this.createMIP(mipScale);
+            this._scaledMIPs[mipLevel] = this.createMIP(mipScale, transform);
         }
 
         return this._scaledMIPs[mipLevel] || super.getTexture();

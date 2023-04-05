@@ -167,7 +167,7 @@ class PenSkin extends Skin {
      * @return {WebGLTexture} The GL texture representation of this skin when drawing at the given size.
      */
     // eslint-disable-next-line no-unused-vars
-    getTexture (scale) {
+    getTexture (scale, transform) {
         return this._texture;
     }
 
