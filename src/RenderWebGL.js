@@ -1635,7 +1635,7 @@ class RenderWebGL extends EventEmitter {
         if (!drawable) return;
         drawable.updateDirection(direction);
         drawable.updateScale(scale);
-        if (translate) drawable.updateTranslation(translate);
+        if (translate) drawable.updateTransform(translate);
     }
 
     /**
