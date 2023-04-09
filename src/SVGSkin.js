@@ -127,7 +127,10 @@ class SVGSkin extends Skin {
             this._svgImage.naturalHeight <= 0
         ) return super.getTexture();
         this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
-        this._context.setTransform(scale, transform[0], transform[1], scale, 0, 0);
+        if (transform) {
+            // Only run this line if the transform is specified
+            this._context.setTransform(scale, transform[0], transform[1], scale, 0, 0);
+        }
         this._context.drawImage(this._svgImage, 0, 0);
 
         // TW: Reading image data from <canvas> is very slow and causes animations to stutter,
