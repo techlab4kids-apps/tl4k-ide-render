@@ -1,5 +1,8 @@
 const twgl = require('twgl.js');
 
+function clampNumber(num, min, max) {
+    return Math.max(Math.min(num, max), min);
+}
 
 class ShaderManager {
     /**
@@ -137,6 +140,34 @@ ShaderManager.EFFECT_INFO = {
         uniformName: 'u_ghost',
         mask: 1 << 6,
         converter: x => 1 - (Math.max(0, Math.min(x, 100)) / 100),
+        shapeChanges: false
+    },
+    /** Red effect */
+    red: {
+        uniformName: 'u_red',
+        mask: 1 << 7,
+        converter: x => ((clampNumber(x, -100, 100) / 100) * 4 + 1),
+        shapeChanges: false
+    },
+    /** Green effect */
+    green: {
+        uniformName: 'u_green',
+        mask: 1 << 8,
+        converter: x => ((clampNumber(x, -100, 100) / 100) * 4 + 1),
+        shapeChanges: false
+    },
+    /** Blue effect */
+    blue: {
+        uniformName: 'u_blue',
+        mask: 1 << 9,
+        converter: x => ((clampNumber(x, -100, 100) / 100) * 4 + 1),
+        shapeChanges: false
+    },
+    /** Opaque effect */
+    opaque: {
+        uniformName: 'u_opaque',
+        mask: 1 << 10,
+        converter: x => clampNumber(Math.ceil(x), 1, 100),
         shapeChanges: false
     }
 };
