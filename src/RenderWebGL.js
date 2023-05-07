@@ -1140,6 +1140,49 @@ class RenderWebGL extends EventEmitter {
     }
 
     /**
+     * Get the point where a particular Drawable is touching any in a set of Drawables.
+     * @param {int} drawableID The ID of the Drawable to check.
+     * @param {?Array<int>} candidateIDs The Drawable IDs to check, otherwise all visible drawables in the renderer
+     * @returns {?Array<number>} [x, y] if found, null if not
+     */
+    getTouchingDrawablesPoint (drawableID, candidateIDs = this._drawList) {
+        const candidates = this._candidatesTouching(drawableID,
+            // even if passed an invisible drawable, we will NEVER touch it!
+            candidateIDs.filter(id => this._allDrawables[id]._visible));
+        // if we are invisble we don't touch anything.
+        if (candidates.length === 0 || !this._allDrawables[drawableID]._visible) {
+            return null;
+        }
+
+        // Get the union of all the candidates intersections.
+        const bounds = this._candidatesBounds(candidates);
+
+        const drawable = this._allDrawables[drawableID];
+        const point = __isTouchingDrawablesPoint;
+
+        drawable.updateCPURenderAttributes();
+
+        // This is an EXTREMELY brute force collision detector, but it is
+        // still faster than asking the GPU to give us the pixels.
+        for (let x = bounds.left; x <= bounds.right; x++) {
+            // Scratch Space - +y is top
+            point[0] = x;
+            for (let y = bounds.bottom; y <= bounds.top; y++) {
+                point[1] = y;
+                if (drawable.isTouching(point)) {
+                    for (let index = 0; index < candidates.length; index++) {
+                        if (candidates[index].drawable.isTouching(point)) {
+                            return point;
+                        }
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Convert a client based x/y position on the canvas to a Scratch 3 world space
      * Rectangle.  This creates recangles with a radius to cover selecting multiple
      * scratch pixels with touch / small render areas.
