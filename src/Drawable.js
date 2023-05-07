@@ -97,6 +97,7 @@ class Drawable {
 
         this._position = twgl.v3.create(0, 0);
         this._scale = twgl.v3.create(100, 100);
+        this._transform = [];
         this._direction = 90;
         this._transformDirty = true;
         this._rotationMatrix = twgl.m4.identity();
@@ -185,6 +186,14 @@ class Drawable {
     }
 
     /**
+     * @returns {Array<number>}
+     * @todo add proper docs
+     */
+    get transform () {
+        return this._transform;
+    }
+
+    /**
      * @returns {object.<string, *>} the shader uniforms to be used when rendering this Drawable.
      */
     getUniforms () {
@@ -254,7 +263,11 @@ class Drawable {
      * @param {Array.<number>} transform A new scale.
      */
     updateTransform (transform) {
-        this.transform = transform;
+        this._transform = transform;
+        this._renderer.dirty = true;
+        this._rotationCenterDirty = true;
+        this._skinScaleDirty = true;
+        this.setTransformDirty();
     }
 
     /**
