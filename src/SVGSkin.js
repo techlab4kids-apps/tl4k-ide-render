@@ -116,6 +116,10 @@ class SVGSkin extends Skin {
             this._silhouette.unlazy();
         }
 
+        if (!transform) transform = [0, 0];
+        if (!transform[0]) transform = [0, 0];
+        if (!transform[1]) transform = [0, 0];
+
         // we scale up transform because 100% is a 45 degree angle (half the image width)
         // we also add 1 to it so this adds size ratther then remove size
         const tx = ((transform[0] * 100) / 200) + 1;
@@ -172,6 +176,11 @@ class SVGSkin extends Skin {
      * @return {WebGLTexture} The GL texture representation of this skin when drawing at the given scale.
      */
     getTexture (scale, transform) {
+        // sometimes transform has undefined passed into it
+        if (!transform) transform = [0, 0];
+        if (typeof transform[0] !== 'number') transform = [0, 0];
+        if (typeof transform[1] !== 'number') transform = [0, 0];
+
         // The texture only ever gets uniform scale. Take the larger of the two axes.
         const scaleMax = scale ? Math.max(Math.abs(scale[0]), Math.abs(scale[1])) : 100;
         const requestedScale = Math.min(scaleMax / 100, this._maxTextureScale);
@@ -184,12 +193,32 @@ class SVGSkin extends Skin {
         // Can't use bitwise stuff here because we need to handle negative exponents
         const mipScale = Math.pow(2, mipLevel - INDEX_OFFSET);
 
-        if (this._svgImageLoaded && (!this._scaledMIPs[mipLevel] || this._transform !== transform)) {
-            this._scaledMIPs[mipLevel] = this.createMIP(mipScale, transform || [0, 0]);
-            this._transform = transform;
+        // this was split into 2 if statements because its hard to read
+        if (this._svgImageLoaded) {
+            // if there is no scaled mip for this level
+            // or the passed in transform doesnt equal the current transform
+            if (!(this._scaledMIPs[mipLevel] && this.isTransformEqual(this._transform, transform))) {
+                this._scaledMIPs[mipLevel] = this.createMIP(mipScale, transform || [0, 0]);
+                this._transform = transform;
+            }
         }
 
         return this._scaledMIPs[mipLevel] || super.getTexture();
+    }
+
+    /**
+     * Checks the values of both transform arrays instead of the entire array.
+     * This is because it causes some goofy bug if you check the entire array where they dont equal for some reason.
+     * @param {Array<number>} transform 
+     * @param {Array<number>} checkingTransform 
+     */
+    isTransformEqual(transform, checkingTransform) {
+        if (!transform) return false;
+        if (!checkingTransform) return false;
+        let value = 0;
+        if (transform[0] === checkingTransform[0]) value++;
+        if (transform[1] === checkingTransform[1]) value++;
+        return value === 2;
     }
 
     /**
