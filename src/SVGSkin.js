@@ -134,7 +134,7 @@ class SVGSkin extends Skin {
             this._svgImage.naturalHeight <= 0
         ) return super.getTexture();
         this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
-        console.log(transform);
+        // console.log(transform);
         this._context.setTransform(scale, transform[0], transform[1], scale, 0, 0);
         this._context.drawImage(this._svgImage, 0, 0);
 
