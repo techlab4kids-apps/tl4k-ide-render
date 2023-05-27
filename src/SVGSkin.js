@@ -34,6 +34,9 @@ class SVGSkin extends Skin {
         /** @type {Array<number>} */
         this._size = [0, 0];
 
+        /** @type {Array<number>} */
+        this._transform = [0, 0];
+
         /** @type {HTMLCanvasElement} */
         this._canvas = document.createElement('canvas');
 
@@ -113,9 +116,13 @@ class SVGSkin extends Skin {
             this._silhouette.unlazy();
         }
 
+        // we scale up transform because 100% is a 45 degree angle (half the image width)
+        // we also add 1 to it so this adds size ratther then remove size
+        const tx = ((transform[0] * 100) / 200) + 1;
+        const ty = ((transform[1] * 100) / 200) + 1;
         const [width, height] = this._size;
-        this._canvas.width = width * scale;
-        this._canvas.height = height * scale;
+        this._canvas.width = (width * scale) * tx;
+        this._canvas.height = (height * scale) * ty;
         if (
             this._canvas.width <= 0 ||
             this._canvas.height <= 0 ||
@@ -127,10 +134,8 @@ class SVGSkin extends Skin {
             this._svgImage.naturalHeight <= 0
         ) return super.getTexture();
         this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
-        if (transform) {
-            // Only run this line if the transform is specified
-            this._context.setTransform(scale, transform[0], transform[1], scale, 0, 0);
-        }
+        console.log(transform);
+        this._context.setTransform(scale, transform[0], transform[1], scale, 0, 0);
         this._context.drawImage(this._svgImage, 0, 0);
 
         // TW: Reading image data from <canvas> is very slow and causes animations to stutter,
@@ -163,6 +168,7 @@ class SVGSkin extends Skin {
 
     /**
      * @param {Array<number>} scale - The scaling factors to be used, each in the [0,100] range.
+     * @param {Array<number>} transform - The scaling factors to be used, each in the [0,100] range.
      * @return {WebGLTexture} The GL texture representation of this skin when drawing at the given scale.
      */
     getTexture (scale, transform) {
@@ -178,8 +184,9 @@ class SVGSkin extends Skin {
         // Can't use bitwise stuff here because we need to handle negative exponents
         const mipScale = Math.pow(2, mipLevel - INDEX_OFFSET);
 
-        if (this._svgImageLoaded && !this._scaledMIPs[mipLevel]) {
-            this._scaledMIPs[mipLevel] = this.createMIP(mipScale, transform);
+        if (this._svgImageLoaded && (!this._scaledMIPs[mipLevel] || this._transform !== transform)) {
+            this._scaledMIPs[mipLevel] = this.createMIP(mipScale, transform || [0, 0]);
+            this._transform = transform;
         }
 
         return this._scaledMIPs[mipLevel] || super.getTexture();

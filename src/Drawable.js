@@ -186,7 +186,7 @@ class Drawable {
     }
 
     /**
-     * @returns {Array<number>}
+     * @returns {Array<number>} transorm
      * @todo add proper docs
      */
     get transform () {
