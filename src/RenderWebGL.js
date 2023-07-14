@@ -249,6 +249,18 @@ class RenderWebGL extends EventEmitter {
         gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
         /**
+         * Whether or not the renderer should be drawing to an XR layer.
+         * Used for the Virtual Reality extension.
+         */
+        this.xrEnabled = false;
+
+        /**
+         * The layer that should be drawn to.
+         * Used for the Virtual Reality extension.
+         */
+        this.xrLayer = null;
+
+        /**
          * Whether projects should be able to access the contents of private skins such as webcams.
          * If set to false, routines such as isTouchingColor will ignore private skins.
          * Private skins will still be rendered on the canvas regardless of this setting.
@@ -791,20 +803,35 @@ class RenderWebGL extends EventEmitter {
         if (!this.dirty) {
             return;
         }
+
+        if (this.xrEnabled) {
+            // dont crash, just dont draw if we dont have a layer
+            // can happen when exiting
+            if (!this.xrLayer) return;
+        }
+
         this.dirty = false;
 
         this._doExitDrawRegion();
 
         const gl = this._gl;
 
-        twgl.bindFramebufferInfo(gl, null);
-        gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
-        gl.clearColor(...this._backgroundColor4f);
+        const xrLayer = this.xrLayer;
+        if (this.xrEnabled) {
+            twgl.bindFramebufferInfo(gl, xrLayer.framebuffer);
+            gl.viewport(0, 0, xrLayer.framebufferWidth, xrLayer.framebufferHeight);
+            // black full transparency apparently
+            gl.clearColor(0, 0, 0, 0);
+        } else {
+            twgl.bindFramebufferInfo(gl, null);
+            gl.viewport(0, 0, gl.canvas.width, gl.canvas.height);
+            gl.clearColor(...this._backgroundColor4f);
+        }
         gl.clear(gl.COLOR_BUFFER_BIT);
 
         this._drawThese(this._drawList, ShaderManager.DRAW_MODE.default, this._projection, {
-            framebufferWidth: gl.canvas.width,
-            framebufferHeight: gl.canvas.height
+            framebufferWidth: this.xrEnabled ? xrLayer.framebufferWidth : gl.canvas.width,
+            framebufferHeight: this.xrEnabled ? xrLayer.framebufferHeight : gl.canvas.height
         });
         if (this._snapshotCallbacks.length > 0) {
             const snapshot = gl.canvas.toDataURL();
