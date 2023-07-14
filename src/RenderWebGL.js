@@ -99,7 +99,10 @@ class RenderWebGL extends EventEmitter {
     static isSupported (optCanvas) {
         try {
             optCanvas = optCanvas || document.createElement('canvas');
-            const options = {alpha: false, stencil: true, antialias: false};
+            const options = {
+                alpha: false, stencil: true, antialias: false,
+                xrCompatible: true,
+};
             return !!(
                 optCanvas.getContext('webgl', options) ||
                 optCanvas.getContext('experimental-webgl', options) ||
@@ -121,6 +124,7 @@ class RenderWebGL extends EventEmitter {
             alpha: false,
             stencil: true,
             antialias: false,
+            xrCompatible: true,
             powerPreference: RenderWebGL.powerPreference
         };
         // getWebGLContext = try WebGL 1.0 only
