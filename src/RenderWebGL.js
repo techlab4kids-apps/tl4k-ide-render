@@ -818,7 +818,9 @@ class RenderWebGL extends EventEmitter {
 
         const xrLayer = this.xrLayer;
         if (this.xrEnabled) {
+            // may need to bind both twgl and gl
             twgl.bindFramebufferInfo(gl, xrLayer.framebuffer);
+            gl.bindFramebuffer(gl.FRAMEBUFFER, xrLayer.framebuffer);
             gl.viewport(0, 0, xrLayer.framebufferWidth, xrLayer.framebufferHeight);
             // black full transparency apparently
             gl.clearColor(0, 0, 0, 0);
