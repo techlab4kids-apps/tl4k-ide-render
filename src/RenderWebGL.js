@@ -100,7 +100,7 @@ class RenderWebGL extends EventEmitter {
         try {
             optCanvas = optCanvas || document.createElement('canvas');
             const options = {
-                alpha: false,
+                alpha: true,
                 stencil: true,
                 antialias: false,
                 xrCompatible: true
@@ -123,7 +123,7 @@ class RenderWebGL extends EventEmitter {
      */
     static _getContext (canvas) {
         const contextAttribs = {
-            alpha: false,
+            alpha: true,
             stencil: true,
             antialias: false,
             xrCompatible: true,
