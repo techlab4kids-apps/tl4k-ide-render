@@ -800,6 +800,7 @@ class RenderWebGL extends EventEmitter {
      * Draw all current drawables and present the frame on the canvas.
      */
     draw () {
+        // practically doesnt matter with XR enabled
         if (!this.dirty) {
             return;
         }
@@ -818,8 +819,8 @@ class RenderWebGL extends EventEmitter {
 
         const xrLayer = this.xrLayer;
         if (this.xrEnabled) {
-            // may need to bind both twgl and gl
-            twgl.bindFramebufferInfo(gl, xrLayer.framebuffer);
+            // todo: mayb this single line is better idk
+            // twgl.bindFramebufferInfo(gl, xrLayer.framebuffer);
             gl.bindFramebuffer(gl.FRAMEBUFFER, xrLayer.framebuffer);
             gl.viewport(0, 0, xrLayer.framebufferWidth, xrLayer.framebufferHeight);
             // black full transparency apparently
