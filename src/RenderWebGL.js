@@ -255,6 +255,18 @@ class RenderWebGL extends EventEmitter {
         this.xrEnabled = false;
 
         /**
+         * Whether or not the renderer should be drawing the image split for VR screens.
+         * Used for the Virtual Reality extension.
+         */
+        this.xrSplitting = false;
+
+        /**
+         * An offset where the XR splitting will shift closer to the center.
+         * Used for the Virtual Reality extension.
+         */
+        this.xrSplitOffset = 0;
+
+        /**
          * The layer that should be drawn to.
          * Used for the Virtual Reality extension.
          */
@@ -832,10 +844,49 @@ class RenderWebGL extends EventEmitter {
         }
         gl.clear(gl.COLOR_BUFFER_BIT);
 
-        this._drawThese(this._drawList, ShaderManager.DRAW_MODE.default, this._projection, {
-            framebufferWidth: this.xrEnabled ? xrLayer.framebufferWidth : gl.canvas.width,
-            framebufferHeight: this.xrEnabled ? xrLayer.framebufferHeight : gl.canvas.height
-        });
+        if (!this.xrSplitting) {
+            // draw normally
+            this._drawThese(this._drawList, ShaderManager.DRAW_MODE.default, this._projection, {
+                framebufferWidth: this.xrEnabled ? xrLayer.framebufferWidth : gl.canvas.width,
+                framebufferHeight: this.xrEnabled ? xrLayer.framebufferHeight : gl.canvas.height
+            });
+        } else {
+            // draw split
+            const width = this.xrEnabled ? xrLayer.framebufferWidth : gl.canvas.width;
+            const height = this.xrEnabled ? xrLayer.framebufferHeight : gl.canvas.height;
+            const stageWidth = this._xRight - this._xLeft;
+
+            // create projections
+            // #1 is used for the left eye
+            // #2 is used for the right eye
+            const projection1 = twgl.m4.ortho(
+                (this._xLeft) + this.xrSplitOffset,
+                (this._xRight + stageWidth) + this.xrSplitOffset,
+                this._yBottom, this._yTop,
+                -1, 1
+            );
+            const projection2 = twgl.m4.ortho(
+                (this._xLeft - stageWidth) - this.xrSplitOffset,
+                ((this._xRight + stageWidth) - (stageWidth)) - this.xrSplitOffset,
+                this._yBottom, this._yTop,
+                -1, 1
+            );
+
+            gl.enable(gl.SCISSOR_TEST);
+            // draw left eye
+            gl.scissor(0, 0, width / 2, height);
+            this._drawThese(this._drawList, ShaderManager.DRAW_MODE.default, projection1, {
+                framebufferWidth: width,
+                framebufferHeight: height
+            });
+            // draw right eye
+            gl.scissor(width / 2, 0, width / 2, height);
+            this._drawThese(this._drawList, ShaderManager.DRAW_MODE.default, projection2, {
+                framebufferWidth: width,
+                framebufferHeight: height
+            });
+            gl.disable(gl.SCISSOR_TEST);
+        }
         if (this._snapshotCallbacks.length > 0) {
             const snapshot = gl.canvas.toDataURL();
             this._snapshotCallbacks.forEach(cb => cb(snapshot));
