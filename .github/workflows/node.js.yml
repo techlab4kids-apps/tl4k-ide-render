@@ -9,16 +9,14 @@ jobs:
   ping-pong:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: test
-        run: npm run test
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2.0.1
         with:
           token: ${{ secrets.t }}
           event-type: update
           repository: PenguinMod/penguinmod.github.io
+      - name: test
+        run: npm run test
       - name: Repository Dispatch2
         uses: peter-evans/repository-dispatch@v2.0.1
         with:
