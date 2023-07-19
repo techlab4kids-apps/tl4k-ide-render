@@ -14,7 +14,7 @@
   "scripts": {
     "build": "webpack --progress --colors",
     "docs": "jsdoc -c .jsdoc.json",
-    "lint": "eslint . &&  && format-message lint src/**/*.js",
+    "lint": "eslint . && format-message lint src/**/*.js",
     "prepublishOnly": "npm run build",
     "prepublish-watch": "npm run watch",
     "start": "webpack-dev-server",
