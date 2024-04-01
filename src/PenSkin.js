@@ -135,7 +135,15 @@ class PenSkin extends Skin {
         this.onNativeSizeChanged = this.onNativeSizeChanged.bind(this);
         this._renderer.on(RenderConstants.Events.NativeSizeChanged, this.onNativeSizeChanged);
 
-        this._setCanvasSize(renderer.getNativeSize());
+        // tl4k
+        // this._setCanvasSize(renderer.getNativeSize());
+
+        var canvasSize = renderer.getNativeSize(); //[1280, 960];
+        const nativeX = renderer.getNativeX();
+        const nativeY = renderer.getNativeY();
+        var multiplier = nativeX === 0 || nativeY === 0 ? 2 : 1;
+        var size = [canvasSize[0] * multiplier, canvasSize[1] * multiplier];
+        this._setCanvasSize(size);
     }
 
     /**

@@ -306,7 +306,7 @@ class RenderWebGL extends EventEmitter {
             }
         }
     }
-    
+
     /**
      * Configure whether the renderer should let projects access private skins.
      * @param {boolean} allowPrivateSkinAccess Whether projects can access private skins or not.
@@ -415,6 +415,19 @@ class RenderWebGL extends EventEmitter {
      */
     getNativeSize () {
         return [this._nativeSize[0], this._nativeSize[1]];
+    }
+
+    // tl4k
+
+    getStageSize() {
+        return this.getNativeSize();
+    }
+    getNativeX() {
+        return this._xLeft;
+    }
+
+    getNativeY() {
+        return this._yBottom;
     }
 
     /**
@@ -1836,17 +1849,37 @@ class RenderWebGL extends EventEmitter {
         const aabb = drawable._skin.getFenceBounds(drawable, __fenceBounds);
         const inset = Math.floor(Math.min(aabb.width, aabb.height) / 2);
 
-        const sx = this._xRight - Math.min(FENCE_WIDTH, inset);
-        if (aabb.right + dx < -sx) {
-            x = Math.ceil(drawable._position[0] - (sx + aabb.right));
-        } else if (aabb.left + dx > sx) {
-            x = Math.floor(drawable._position[0] + (sx - aabb.left));
+        // const sx = this._xRight - Math.min(FENCE_WIDTH, inset);
+        // if (aabb.right + dx < -sx) {
+        //     x = Math.ceil(drawable._position[0] - (sx + aabb.right));
+        // } else if (aabb.left + dx > sx) {
+        //     x = Math.floor(drawable._position[0] + (sx - aabb.left));
+        // }
+        // const sy = this._yTop - Math.min(FENCE_WIDTH, inset);
+        // if (aabb.top + dy < -sy) {
+        //     y = Math.ceil(drawable._position[1] - (sy + aabb.top));
+        // } else if (aabb.bottom + dy > sy) {
+        //     y = Math.floor(drawable._position[1] + (sy - aabb.bottom));
+        // }
+        // return [x, y];
+
+        // tl4k updates fences calculation based on canvas boards limits (no more only default -240, 240 - -180, 180)
+        const sxLeft = this._xLeft + Math.min(FENCE_WIDTH, inset);
+        const sxRight = this._xRight - Math.min(FENCE_WIDTH, inset);
+        let newX = aabb.right + dx;
+        if (newX < sxLeft) {
+            x = Math.ceil(drawable._position[0] + (sxLeft - aabb.right));
+        } else if (aabb.left + dx > sxRight) {
+            x = Math.floor(drawable._position[0] + (sxRight - aabb.left));
         }
-        const sy = this._yTop - Math.min(FENCE_WIDTH, inset);
-        if (aabb.top + dy < -sy) {
-            y = Math.ceil(drawable._position[1] - (sy + aabb.top));
-        } else if (aabb.bottom + dy > sy) {
-            y = Math.floor(drawable._position[1] + (sy - aabb.bottom));
+
+        const syBottom = this._yBottom + Math.min(FENCE_WIDTH, inset);
+        const syTop = this._yTop - Math.min(FENCE_WIDTH, inset);
+        let newY = aabb.top + dy;
+        if (newY < syBottom) {
+            y = Math.ceil(drawable._position[1] + (syBottom - aabb.top));
+        } else if (aabb.bottom + dy > syTop) {
+            y = Math.floor(drawable._position[1] + (syTop - aabb.bottom));
         }
         return [x, y];
     }
