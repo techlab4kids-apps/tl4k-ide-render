@@ -240,8 +240,21 @@ class RenderWebGL extends EventEmitter {
         this.on(RenderConstants.Events.NativeSizeChanged, this.onNativeSizeChanged);
 
         this.setBackgroundColor(1, 1, 1);
-        this.setStageSize(xLeft || -240, xRight || 240, yBottom || -180, yTop || 180);
+
+        // TL4K
+        xLeft = xLeft === undefined ? -240 : xLeft;
+        xRight = xRight === undefined ? 240 : xRight;
+        yBottom = yBottom === undefined ? -180 : yBottom;
+        yTop = yTop === undefined ? 180 : yTop;
+
+        this.stageCoordinates = {xLeft: xLeft, xRight: xRight, yBottom: yBottom, yTop: yTop}
+
+        this.setStageSize(xLeft, xRight, yBottom, yTop);
         this.resize(this._nativeSize[0], this._nativeSize[1]);
+
+
+        // this.setStageSize(xLeft || -240, xRight || 240, yBottom || -180, yTop || 180);
+        // this.resize(this._nativeSize[0], this._nativeSize[1]);
 
         gl.disable(gl.DEPTH_TEST);
         /** @todo disable when no partial transparency? */
@@ -280,6 +293,15 @@ class RenderWebGL extends EventEmitter {
          * @type {boolean}
          */
         this.allowPrivateSkinAccess = true;
+    }
+
+    updateStageCoordinates(xLeft, xRight, yBottom, yTop){
+        this._createGeometry();
+
+        this.on(RenderConstants.Events.NativeSizeChanged, this.onNativeSizeChanged);
+
+        this.setStageSize(xLeft, xRight, yBottom, yTop);
+        this.resize(this._nativeSize[0], this._nativeSize[1]);
     }
 
     // tw: implement high quality pen option
